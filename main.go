@@ -3,11 +3,13 @@ package main
 import (
 	"net/http"
 
+	"github.com/abhijitpattar/gin-rest-go/db"
 	"github.com/abhijitpattar/gin-rest-go/models"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	db.InitDB()
 	// Create a Gin router with default middleware (logger and recovery)
 	server := gin.Default()
 
@@ -24,6 +26,7 @@ func getEvents(context *gin.Context) {
 
 func createEvent(context *gin.Context) {
 	var event models.Event
+	//fmt.Println("in create event", event)
 	err := context.ShouldBindJSON(&event)
 
 	if err != nil {
@@ -33,5 +36,6 @@ func createEvent(context *gin.Context) {
 
 	event.ID = 1
 	event.UserID = 1
+	event.Save()
 	context.JSON(http.StatusCreated, gin.H{"message": " event created", "event": event})
 }
